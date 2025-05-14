@@ -8,7 +8,7 @@ format:
     toc-depth: 2
 ---
 
-# 0 – Libaries
+# 0 – Libraries
 ```{r}
 #| label: Libraries
 #| message: false
@@ -317,7 +317,7 @@ sg_filtered
 
 sg_parsed <- sg_filtered %>%
   mutate(
-    age_group = str_trim(age_group),  # remove extra whitespace
+    age_group = str_trim(age_group),  # remove extra white space
     age = case_when(
       str_detect(age_group, "Under 1")       ~ 0,
       str_detect(age_group, "1 - 4")         ~ 1,
@@ -380,3 +380,23 @@ sg_ref <- read_csv(
 waldo::compare(sg_clean, sg_ref, tolerance = 1e-12)
 ```
 # 3 – Reflections
+## 1. Key takeaway
+1.  What is one thing you learned in today’s lab? Explain why this point stood out to you.
+
+-   One thing we learned in today’s lab is how to use various operations to manipulate and clean data in R. This point stood out to us because it highlighted the importance of data cleaning in the data analysis process. We learned how to handle missing values, parse age groups correctly, and reshape data into a tidy format. These skills are essential for ensuring that our data is accurate and ready for analysis, which is crucial for making informed decisions based on the data.
+
+## 2. Challenges
+2. What did you find confusing or difficult?
+
+-   We found it challenging to parse the age groups correctly, especially when dealing with ranges and "Years & Over" labels. It required careful string manipulation and regular expressions to extract the correct age values.
+
+## 3. AI assistance
+3. If you used any generative AI tools (e.g., ChatGPT or GitHub Copilot), explain how they helped.
+
+-   We used ChatGPT to help us understand how to infer the oldest cohort size from the age groups for task 2. It provided us with a clear explanation of how to use regular expressions to extract the age values,  and to utilize the cumulative values to estimate the size of the oldest five-year cohort, which made it easier for us to implement the solution in our code.
+
+## 4. Teamwork
+4. How did your team collaborate on this assignment? Identify one strength and one area for improvement.
+
+-   Our team collaborated effectively by utilizing GitHub for version control and sharing code snippets. One strength was our ability to do our task individually
+and then come together to review and integrate our work, which allowed us to leverage each others strengths and helped us work efficiently. An area for improvement would be to schedule more frequent check-ins to discuss our progress and address any challenges we faced in real-time.
