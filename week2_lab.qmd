@@ -6,6 +6,23 @@ format: html
 
 # 1 - Country-Level Statistics from the World Bank
 
+## Requirements
+```{r}
+#| label: requirements
+#| message: false
+#| warning: false
+#| echo: true
+
+install.packages(
+    c("tidyverse", "readxl", "countrycode", "waldo"),
+    repos = "https://cloud.r-project.org"
+)
+library(tidyverse)
+library(readxl)
+library(countrycode)
+library(waldo)
+```
+
 ## Task 1 - Import 2019 Indicators
 
 ```{r task1-import}
