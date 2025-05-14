@@ -1,5 +1,5 @@
 ---
-title: "Week 2 Lab"
+title: "Peru_P1_Week2Lab"
 author: "Team Peru"
 date: today
 format:
@@ -12,8 +12,11 @@ format:
 ```{r}
 #| label: Libraries
 #| message: false
-#| warning: false
+#| warning: true
+#| error: true
 #| echo: true
+#| eval: true
+#| include: true
 
 library(tidyverse)
 library(readxl)
@@ -28,6 +31,11 @@ library(waldo)
 ```{r task1-import}
 #| label: task1.1-import
 #| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
 
 wb_files <- tribble(
   ~file, ~var,
@@ -51,6 +59,11 @@ world_2019            # still contains regional aggregates
 ```{r}
 #| label: task1.2-filter
 #| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
 
 country_lookup <- countrycode::codelist |>
   select(code = wb, name = country.name.en, continent)
@@ -66,6 +79,11 @@ nrow(world_countries)   # count after dropping aggregates
 ```{r}
 #| label: task1.3-continent
 #| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
 world_countries <- world_countries |>
   relocate(name, code, continent)
 
@@ -76,6 +94,11 @@ glimpse(world_countries)
 ```{r}
 #| label: task1.4-format
 #| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
 
 # 0 Get the official World Bank country names from the GDP sheet
 wb_names <- read_excel(
@@ -111,6 +134,11 @@ world_formatted
 ```{r}
 #| label: task1.5-validate
 #| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
 
 # 1 Ensure there are no NAs left
 sum(is.na(world_formatted))        # expect 0
@@ -133,6 +161,11 @@ Below we read the header row (A11:BQ11) to grab the years, then read rows 37–8
 ```{r}
 #| label: task2.1-import
 #| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
 
 # point to the SingStat file
 xlsx_file <- file.path("data", "task2", "outputFile.xlsx")
@@ -170,7 +203,12 @@ sg_raw
 ## Task 2.15 – Testing
 ```{r task2.15-testing, message=FALSE}
 #| label: task2.15-testing
-
+#| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
 library(readxl)
 library(dplyr)
 library(tidyr)
@@ -254,6 +292,11 @@ We pivot the data into long form, convert `year` to integer, and keep only the d
 ```{r task2.2-filter}
 #| label: task2.2-filter
 #| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
 
 sg_filtered <- sg_long %>%
   filter(year %% 10 == 0, year >= 1960, year <= 2020)
@@ -266,6 +309,11 @@ sg_filtered
 ```{r task2.3-parse}
 #| label: task2.3-parse
 #| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
 
 sg_parsed <- sg_filtered %>%
   mutate(
@@ -293,7 +341,12 @@ sg_parsed_deduped
 ## Task 2.4 – Format Data
 ```{r task2.4-format, message=FALSE}
 #| label: task2.4-format
-
+#| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
 sg_final <- sg_parsed_deduped %>%
   select(age, sex, year, pop) %>%
   arrange(age, sex, year)
@@ -307,6 +360,11 @@ Remove any rows containing `NA`, then compare your result to the provided `sg_5y
 ```{r task2.5-validate}
 #| label: task2.5-validate
 #| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
 
 # 1. Drop any rows with missing values
 sg_clean <- sg_final %>%
