@@ -1,4 +1,119 @@
 ---
 title: "Week 2 Lab"
+author: "Team Peru"
 format: html
 ---
+
+# 1 - Country-Level Statistics from the World Bank
+
+## Task 1 - Import 2019 Indicators
+
+```{r task1-import}
+#| label: task1-import
+#| message: false
+library(tidyverse)
+library(readxl)
+
+wb_files <- tribble(
+  ~file, ~var,
+  "data/task1/API_NY.GDP.PCAP.CD_DS2_en_excel_v2_85284.xls", "gdp_per_capita",
+  "data/task1/API_SP.DYN.LE00.IN_DS2_en_excel_v2_85119.xls", "life_exp",
+  "data/task1/API_SP.POP.TOTL_DS2_en_excel_v2_85347.xls", "pop"
+)
+
+read_wb_2019 <- function(path, new_var) {
+  read_excel(path, sheet = "Data", skip = 3) |>
+    select(code = `Country Code`, !!new_var := `2019`)
+}
+
+raw_list   <- map2(wb_files$file, wb_files$var, read_wb_2019)
+world_2019 <- reduce(raw_list, left_join, by = "code")
+
+world_2019            # still contains regional aggregates
+```
+
+## Task 2 - Restrict to Actual Countries
+
+```{r}
+#| label: task2-filter
+#| message: false
+library(countrycode)
+
+country_lookup <- countrycode::codelist |>
+  select(code = wb, name = country.name.en, continent)
+
+world_countries <- world_2019 |>
+  inner_join(country_lookup, by = "code") |>
+  arrange(name)
+
+nrow(world_countries)   # count after dropping aggregates
+```
+
+## Task 3 - Add Continent Info
+
+```{r}
+#| label: task3-continent
+#| message: false
+world_countries <- world_countries |>
+  relocate(name, code, continent)
+
+glimpse(world_countries)
+```
+
+## Task 4 - Format Data Frame
+
+```{r}
+#| label: task4-format
+#| message: false
+library(readxl)
+
+# 0 Get the official World Bank country names from the GDP sheet
+wb_names <- read_excel(
+  "data/task1/API_NY.GDP.PCAP.CD_DS2_en_excel_v2_85284.xls",
+  sheet = "Data",
+  skip  = 3
+) |>
+  select(code = `Country Code`,
+         name = `Country Name`)
+
+# 1 Bring continent + indicators together
+world_formatted <- world_countries |>
+  select(-name) |>                       # discard codelist name
+  left_join(wb_names, by = "code") |>    # add WB‑official name
+  relocate(name, code, continent) |>
+  transmute(                             # keep / rename columns
+    name,
+    code,
+    gdp_per_cap = gdp_per_capita,
+    life_exp,
+    pop,
+    continent
+  ) |>
+  drop_na() |>                           # remove any remaining NAs
+  filter(!code %in% c("CHI", "XKX")) |>  # drop Channel Islands & Kosovo
+  arrange(name)                          # alphabetical
+
+nrow(world_formatted)                    # prints 209
+world_formatted
+```
+
+## Task 5 - No Missing Data & Reference Check
+
+```{r}
+#| label: task5-validate
+#| message: false
+library(readr)
+library(waldo)
+
+# 1 Ensure there are no NAs left
+sum(is.na(world_formatted))        # expect 0
+
+# 2 Load reference file and compare
+world_ref <- read_csv("data/reference/country_profiles_2019.csv", show_col_types = FALSE)
+
+waldo::compare(
+  world_formatted,
+  world_ref,
+  tolerance = 1e-12
+)
+```
