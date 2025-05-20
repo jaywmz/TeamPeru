@@ -1,0 +1,17 @@
+# Quarto build outputs
+*.html
+*_files/
+.quarto/
+
+# RStudio temp/config
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+
+# VS Code settings
+.vscode/
+
+# OS junk
+.DS_Store
+Thumbs.db
