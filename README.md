@@ -1,4 +1,4 @@
-# Lab2_TeamPeru: Data Visualization and Analysis
+# TeamPeru: CSC3107-Information Visualisation 
 
 This repository contains Team Peru's weekly lab assignments for a data visualization and analysis course. The labs focuses on cleaning, manipulating, and visualizing data using R and the tidyverse ecosystem.
 
