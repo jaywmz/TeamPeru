@@ -1,7 +1,0 @@
-"0","#| label: task2.4-format"
-"0",""
-"0","sg_final <- sg_parsed_deduped %>%"
-"0","  select(age, sex, year, pop) %>%"
-"0","  arrange(age, sex, year)"
-"0",""
-"0","sg_final"

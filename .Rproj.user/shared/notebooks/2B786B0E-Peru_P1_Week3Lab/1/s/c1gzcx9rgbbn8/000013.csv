@@ -1,3 +1,0 @@
-"0","#| label: preview-original"
-"0","# Show the first six rows of the raw penguins tibble"
-"0","head(penguins)"

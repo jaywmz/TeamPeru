@@ -1,6 +1,0 @@
-"0","#| label: remove-missing"
-"0",""
-"0","# Step 1: count rows with missing bill length"
-"0","penguins %>% "
-"0","  filter(is.na(bill_length_mm)) %>% "
-"0","  count(name = ""n_missing"")"

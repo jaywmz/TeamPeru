@@ -1,3 +1,0 @@
-"0","penguins_clean %>%"
-"0","  distinct(species, bill_length_mm) %>%"
-"0","  count()"
