@@ -1,0 +1,402 @@
+---
+title: "Peru_P1_Week2Lab"
+author: "Team Peru"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 2
+---
+
+# 0 – Libraries
+```{r}
+#| label: Libraries
+#| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
+
+library(tidyverse)
+library(readxl)
+library(countrycode)
+library(waldo)
+```
+
+
+# 1 – Country-Level Statistics from the World Bank
+
+## Task 1.1 – Import 2019 Indicators
+```{r task1-import}
+#| label: task1.1-import
+#| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
+
+wb_files <- tribble(
+  ~file, ~var,
+  "data/task1/API_NY.GDP.PCAP.CD_DS2_en_excel_v2_85284.xls", "gdp_per_capita",
+  "data/task1/API_SP.DYN.LE00.IN_DS2_en_excel_v2_85119.xls", "life_exp",
+  "data/task1/API_SP.POP.TOTL_DS2_en_excel_v2_85347.xls", "pop"
+)
+
+read_wb_2019 <- function(path, new_var) {
+  read_excel(path, sheet = "Data", skip = 3) |>
+    select(code = `Country Code`, !!new_var := `2019`)
+}
+
+raw_list   <- map2(wb_files$file, wb_files$var, read_wb_2019)
+world_2019 <- reduce(raw_list, left_join, by = "code")
+
+world_2019            # still contains regional aggregates
+```
+
+## Task 1.2 – Restrict to Actual Countries
+```{r}
+#| label: task1.2-filter
+#| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
+
+country_lookup <- countrycode::codelist |>
+  select(code = wb, name = country.name.en, continent)
+
+world_countries <- world_2019 |>
+  inner_join(country_lookup, by = "code") |>
+  arrange(name)
+
+nrow(world_countries)   # count after dropping aggregates
+```
+
+## Task 1.3 – Add Continent Info
+```{r}
+#| label: task1.3-continent
+#| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
+world_countries <- world_countries |>
+  relocate(name, code, continent)
+
+glimpse(world_countries)
+```
+
+## Task 1.4 – Format Data Frame
+```{r}
+#| label: task1.4-format
+#| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
+
+# 0 Get the official World Bank country names from the GDP sheet
+wb_names <- read_excel(
+  "data/task1/API_NY.GDP.PCAP.CD_DS2_en_excel_v2_85284.xls",
+  sheet = "Data",
+  skip  = 3
+) |>
+  select(code = `Country Code`,
+         name = `Country Name`)
+
+# 1 Bring continent + indicators together
+world_formatted <- world_countries |>
+  select(-name) |>                       # discard codelist name
+  left_join(wb_names, by = "code") |>    # add WB‑official name
+  relocate(name, code, continent) |>
+  transmute(                             # keep / rename columns
+    name,
+    code,
+    gdp_per_cap = gdp_per_capita,
+    life_exp,
+    pop,
+    continent
+  ) |>
+  drop_na() |>                           # remove any remaining NAs
+  filter(!code %in% c("CHI", "XKX")) |>  # drop Channel Islands & Kosovo
+  arrange(name)                          # alphabetical
+
+nrow(world_formatted)                    # prints 209
+world_formatted
+```
+
+## Task 1.5 – No Missing Data & Reference Check
+```{r}
+#| label: task1.5-validate
+#| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
+
+# 1 Ensure there are no NAs left
+sum(is.na(world_formatted))        # expect 0
+
+# 2 Load reference file and compare
+world_ref <- read_csv("data/reference/country_profiles_2019.csv", show_col_types = FALSE)
+
+waldo::compare(
+  world_formatted,
+  world_ref,
+  tolerance = 1e-12
+)
+```
+
+# 2 – Population Statistics for Singapore
+
+## Task 2.1 – Import data
+
+Below we read the header row (A11:BQ11) to grab the years, then read rows 37–86 and assign those names.
+```{r}
+#| label: task2.1-import
+#| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
+
+# point to the SingStat file
+xlsx_file <- file.path("data", "task2", "outputFile.xlsx")
+
+# 1. Read the header row (A11:BQ11) without names
+year_header <- read_excel(
+  xlsx_file,
+  sheet     = "T4",
+  range     = "A11:BQ11",
+  col_names = FALSE
+)
+
+# 2. Build column names: first "age_group", then the years
+col_names <- c(
+  "age_group",
+  as.character(unlist(year_header[1, -1]))
+)
+
+# 3. Read the data block (rows 37–86) without names
+sg_raw <- read_excel(
+  xlsx_file,
+  sheet     = "T4",
+  range     = "A37:BQ86",
+  col_names = FALSE
+)
+
+# 4. Assign the extracted names
+colnames(sg_raw) <- col_names
+
+# 5. Inspect the first few rows
+head(sg_raw)
+sg_raw
+```
+
+## Task 2.15 – Testing
+```{r task2.15-testing, message=FALSE}
+#| label: task2.15-testing
+#| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+# --- Import Data ---
+year_header <- read_excel(
+  "data/task2/outputFile.xlsx",
+  sheet     = "T4",
+  range     = "A11:BQ11",
+  col_names = FALSE
+)
+sg_raw <- read_excel(
+  "data/task2/outputFile.xlsx",
+  sheet     = "T4",
+  range     = "A37:BQ86",
+  col_names = FALSE
+)
+
+# --- Data Parsing ---
+# Drop "Data Series" in header
+years <- as.character(as.numeric(year_header[1, -1]))
+
+# Find where female block starts
+female_start <- which(sg_raw[[1]] == "Total Female Residents")
+
+# Split into male_raw and female_raw
+male_raw   <- sg_raw[1:(female_start - 1), ]
+female_raw <- sg_raw[female_start:nrow(sg_raw), ]
+
+# Assign column names: age_group + years
+colnames(male_raw)   <- c("age_group", years)
+colnames(female_raw) <- c("age_group", years)
+
+# Preview raw blocks
+head(male_raw, 5)
+head(female_raw, 5)
+
+# --- Reshape Data ---
+# Tidy Male
+male_long <- male_raw %>%
+  mutate(across(everything(), as.character)) %>%
+  pivot_longer(
+    cols      = -1,
+    names_to  = "year",
+    values_to = "pop"
+  ) %>%
+  rename(age_group = 1) %>%
+  mutate(
+    sex = factor("Male", levels = c("Male", "Female")),
+    year = as.numeric(year),
+    pop  = as.numeric(gsub(",", "", pop))
+  )
+
+# Tidy Female
+female_long <- female_raw %>%
+  mutate(across(everything(), as.character)) %>%
+  pivot_longer(
+    cols      = -1,
+    names_to  = "year",
+    values_to = "pop"
+  ) %>%
+  rename(age_group = 1) %>%
+  mutate(
+    sex = factor("Female", levels = c("Male", "Female")),
+    year = as.numeric(year),
+    pop  = as.numeric(gsub(",", "", pop))
+  )
+
+# Combine and clean
+sg_long <- bind_rows(male_long, female_long) %>%
+  filter(!str_detect(age_group, "Total"))
+
+# Final preview
+sg_long
+```
+
+## Task 2.2 – Restrict to relevant years
+
+We pivot the data into long form, convert `year` to integer, and keep only the decadal years.
+```{r task2.2-filter}
+#| label: task2.2-filter
+#| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
+
+sg_filtered <- sg_long %>%
+  filter(year %% 10 == 0, year >= 1960, year <= 2020)
+
+# Preview filtered years
+sg_filtered
+```
+
+## Task 2.3 – Infer the oldest cohort size
+```{r task2.3-parse}
+#| label: task2.3-parse
+#| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
+
+sg_parsed <- sg_filtered %>%
+  mutate(
+    age_group = str_trim(age_group),  # remove extra white space
+    age = case_when(
+      str_detect(age_group, "Under 1")       ~ 0,
+      str_detect(age_group, "1 - 4")         ~ 1,
+      str_detect(age_group, "\\d+ - \\d+")   ~ as.numeric(str_extract(age_group, "^\\d+")),
+      str_detect(age_group, "\\d+ Years & Over") ~ as.numeric(str_extract(age_group, "^\\d+")),
+      TRUE                                   ~ NA_real_
+    )
+  ) %>%
+  filter(!str_detect(age_group, "^Total")) %>%  # drop any "Total ..." rows
+  drop_na(age, pop)
+
+sg_parsed_deduped <- sg_parsed %>%
+  distinct(age, sex, year, .keep_all = TRUE) %>%
+  arrange(age, sex, year)
+
+# Preview the first few rows
+head(sg_parsed_deduped, 10)
+sg_parsed_deduped
+```
+
+## Task 2.4 – Format Data
+```{r task2.4-format, message=FALSE}
+#| label: task2.4-format
+#| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
+sg_final <- sg_parsed_deduped %>%
+  select(age, sex, year, pop) %>%
+  arrange(age, sex, year)
+
+sg_final
+```
+
+## Task 2.5 – No Missing Data & Reference Check
+
+Remove any rows containing `NA`, then compare your result to the provided `sg_5yr_cohorts.csv`.
+```{r task2.5-validate}
+#| label: task2.5-validate
+#| message: false
+#| warning: true
+#| error: true
+#| echo: true
+#| eval: true
+#| include: true
+
+# 1. Drop any rows with missing values
+sg_clean <- sg_final %>%
+  drop_na()
+
+# 2. Load reference file, setting sex as a factor with the correct levels
+sg_ref <- read_csv(
+  "data/reference/sg_5yr_cohorts.csv",
+  col_types = cols(sex = col_factor(levels = c("Male", "Female")))
+)
+
+# 3. Compare — should return "No differences"
+waldo::compare(sg_clean, sg_ref, tolerance = 1e-12)
+```
+# 3 – Reflections
+## 1. Key takeaway
+1.  What is one thing you learned in today’s lab? Explain why this point stood out to you.
+
+-   One thing we learned in today’s lab is how to use various operations to manipulate and clean data in R. This point stood out to us because it highlighted the importance of data cleaning in the data analysis process. We learned how to handle missing values, parse age groups correctly, and reshape data into a tidy format. These skills are essential for ensuring that our data is accurate and ready for analysis, which is crucial for making informed decisions based on the data.
+
+## 2. Challenges
+2. What did you find confusing or difficult?
+
+-   We found it challenging to parse the age groups correctly, especially when dealing with ranges and "Years & Over" labels. It required careful string manipulation and regular expressions to extract the correct age values.
+
+## 3. AI assistance
+3. If you used any generative AI tools (e.g., ChatGPT or GitHub Copilot), explain how they helped.
+
+-   We used ChatGPT to help us understand how to infer the oldest cohort size from the age groups for task 2. It provided us with a clear explanation of how to use regular expressions to extract the age values,  and to utilize the cumulative values to estimate the size of the oldest five-year cohort, which made it easier for us to implement the solution in our code.
+
+## 4. Teamwork
+4. How did your team collaborate on this assignment? Identify one strength and one area for improvement.
+
+-   Our team collaborated effectively by utilizing GitHub for version control and sharing code snippets. One strength was our ability to do our task individually
+and then come together to review and integrate our work, which allowed us to leverage each others strengths and helped us work efficiently. An area for improvement would be to schedule more frequent check-ins to discuss our progress and address any challenges we faced in real-time.

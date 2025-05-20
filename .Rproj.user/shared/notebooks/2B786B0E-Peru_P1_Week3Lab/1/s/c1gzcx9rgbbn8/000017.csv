@@ -1,0 +1,6 @@
+"0","# Summarize total rows and how many have missing bill_length_mm"
+"0","penguins %>%"
+"0","  summarise("
+"0","    total_rows = n(),"
+"0","    missing_bill_length = sum(is.na(bill_length_mm))"
+"0","  )"

@@ -1,0 +1,29 @@
+"0","#| label: install-beeswarm"
+"0","#| include: false"
+"0","if (!requireNamespace(""ggbeeswarm"", quietly = TRUE)) {"
+"0","  install.packages(""ggbeeswarm"")"
+"0","}"
+"2","G2;H2;WARNINGh: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+g"
+"2","G3;Installing package into ‘C:/Users/wmjia/AppData/Local/R/win-library/4.5’
+(as ‘lib’ is unspecified)
+g"
+"2","G3;also installing the dependencies ‘beeswarm’, ‘vipor’
+
+g"
+"2","trying URL 'https://cran.rstudio.com/bin/windows/contrib/4.5/beeswarm_0.4.0.zip'
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/4.5/vipor_0.4.7.zip'
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/4.5/ggbeeswarm_0.7.2.zip'
+"
+"1","package ‘beeswarm’ successfully unpacked and MD5 sums checked
+"
+"1","package ‘vipor’ successfully unpacked and MD5 sums checked
+"
+"1","package ‘ggbeeswarm’ successfully unpacked and MD5 sums checked
+"
+"1","
+The downloaded binary packages are in
+	C:\Users\wmjia\AppData\Local\Temp\Rtmp2LMi8j\downloaded_packages
+"

@@ -1,0 +1,7 @@
+"0","#| label: why-jitter"
+"0","#| message: false"
+"0",""
+"0","penguins_clean %>%"
+"0","  count(species, bill_length_mm) %>% "
+"0","  filter(n > 1) %>% "
+"0","  arrange(desc(n))"
