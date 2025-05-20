@@ -382,3 +382,138 @@ Adélie penguins have significantly shorter bills than both Chinstraps and Gento
 Chinstrap bills are also significantly shorter than Gentoo bills.
 
 So all three species differ from one another in mean bill length at the 5% level.
+
+# 2 Find a Data Set to Demonstrate Mitigation of Overplotting
+
+## 2.1 Source and Description
+
+I’m using the `mpg` data set from the **ggplot2** package  
+(hosted on Rdatasets GitHub):  
+<https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2/mpg.csv>  
+
+This is a fuel‐economy data set of 234 vehicles (model years 1999–2008), with one row per model.  
+Key columns include:
+
+- `displ` (engine displacement, in litres)  
+- `hwy` (highway mpg)  
+- `cty` (city mpg)  
+- `class` (vehicle class, e.g. “compact”, “suv”)  
+
+## 2.2 Validation of Conditions C, D, and E
+
+```{r}
+#| label: import-mpg
+#| message: false
+
+library(tidyverse)
+
+mpg_raw <- read_csv(
+  "https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2/mpg.csv"
+)
+
+# C: 20–500 rows?
+nrow(mpg_raw)
+#> [1] 234
+
+# D: at least two quantitative variables?
+mpg_raw %>% 
+  select(displ, hwy, cty) %>% 
+  map_chr(class)
+#>   displ     hwy     cty 
+#> "numeric" "numeric" "numeric"
+
+# E: at least one exact duplicate in a pair?
+#    e.g. identical city/highway mpg
+mpg_raw %>% 
+  count(cty, hwy) %>% 
+  filter(n > 1)
+```
+
+## 2.3 Basic Scatter Plot
+
+```{r}
+#| label: basic-scatter
+ggplot(mpg_raw, aes(displ, hwy)) +
+  geom_point(alpha = .6) +
+  labs(
+    x = "Engine displacement (L)",
+    y = "Highway mpg",
+    title = "Scatter of displacement vs highway fuel economy"
+  )
+```
+
+## 2.4 Mitigating Overplotting
+
+### a) Jitter + transparency
+```{r}
+#| label: scatter-jitter
+ggplot(mpg_raw, aes(displ, hwy)) +
+  geom_jitter(width = .1, height = .1, alpha = .4) +
+  labs(
+    x = "Displacement (L)", 
+    y = "Highway mpg", 
+    title = "Jittered points (α = 0.4)"
+  )
+```
+Advantage: reveals clustered points by spreading them slightly
+
+Disadvantage: can mislead exact position & adds random noise
+
+### b) Point area counts via geom_count()
+
+```{r}
+#| label: scatter-count
+ggplot(mpg_raw, aes(displ, hwy)) +
+  geom_count(alpha = .5) +
+  scale_size_area(max_size = 6) +
+  labs(
+    x = "Displacement (L)",
+    y = "Highway mpg",
+    size = "Count",
+    title = "Point area proportional to number of overlapping observations"
+  )
+```
+
+Advantage: each symbol still sits exactly at true coords, area encodes multiplicity
+
+Disadvantage: nearby counts may still overlap; harder to read small circles
+
+## 2.5 Smoothing Trends
+
+### a) LOESS smoother
+
+```{r}
+#| label: smooth-loess
+ggplot(mpg_raw, aes(displ, hwy)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(
+    x = "Displacement (L)",
+    y = "Highway mpg",
+    title = "LOESS fit (no CI)"
+  )
+```
+
+Strength: flexibly captures non‐linear trends
+
+Weakness: may over‐fit in sparse regions
+
+### b) Linear model
+
+```{r}
+#| label: smooth-lm
+ggplot(mpg_raw, aes(displ, hwy)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "lm", se = FALSE, color = "darkred") +
+  labs(
+    x = "Displacement (L)",
+    y = "Highway mpg",
+    title = "Linear regression trend"
+  )
+```
+
+Strength: simple, easy to interpret slope & intercept
+
+Weakness: imposes straight‐line fit, misses curvature
+
+# 3 Reflections
