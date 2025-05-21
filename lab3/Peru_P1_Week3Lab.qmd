@@ -7,7 +7,10 @@ format:
     toc: true
     toc-depth: 4
 ---
-```{r globalsetup, include = TRUE}
+```{r}
+#| label: globalsetup
+#| include: true
+
 knitr::opts_chunk$set(
   echo    = TRUE,
   message = FALSE,
