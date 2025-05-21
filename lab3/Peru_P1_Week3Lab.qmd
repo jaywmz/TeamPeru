@@ -1,7 +1,6 @@
 ---
 title: "Peru_P1_Week3Lab"
-author: "Jiang Weimin, Lioh Yong Hao, Teo Shun Hao, Lee Wei Kwan Bernard
-Cing Hoih San Lian, Alicia Au Yong Hui Qi"
+author: "Jiang Weimin, Lioh Yong Hao, Teo Shun Hao, Lee Wei Kwan Bernard, Cing Hoih San Lian, Alicia Au Yong Hui Qi"
 date: today
 format:
   html:
@@ -121,7 +120,7 @@ penguins_clean %>%
   count()
 ```
 
-Here you’ll get distinct_pairs = 208 out of 342 rows, confirming that 134 measurements overlap. Those overlaps are exactly why a plain geom_point() hides the true number of penguins—jittering will spread them out so we can see each one.
+Here you’ll get distinct_pairs = 208 out of 342 rows, confirming that 134 measurements overlap. Those overlaps are exactly why a plain geom_point() hides the true number of penguins — jittering will spread them out so we can see each one.
 
 ## 1.4 Jitter Plot
 
@@ -139,7 +138,7 @@ penguins_clean %>%
   geom_jitter(
     width  = 0, # no horizontal jitter
     height = 0.1, # small vertical jitter so clusters stay distinct
-    alpha  = 0.5 # semi-transparent points to show overplotting density
+    alpha  = 0.5 # semi-transparent points to show over-plotting density
   ) +
   labs(
     x       = "Bill Length (mm)",
@@ -197,14 +196,14 @@ penguins_clean %>%
 
 What you’ll see:
 
-Each bill-length value sits exactly on the x-axis, but points are offset in the y-direction to avoid overplotting.
+Each bill-length value sits exactly on the x-axis, but points are offset in the y-direction to avoid over-plotting.
 
 Compared to jitter, the beeswarm layout more clearly shows clumps of identical values without random noise.
 
 ## 1.6 Pros and Cons of Bee-Swarm Plots
 
 What I like:
-Bee-swarms neatly pack every identical bill-length value so you can see the exact counts without any random jitter—no guessing how many points are hiding underneath.
+Bee-swarms neatly pack every identical bill-length value so you can see the exact counts without any random jitter — no guessing how many points are hiding underneath.
 
 What bugs me:
 If you have a ton of duplicate measurements, the swarm can balloon or get squeezed, making it hard to compare across species (and it doesn’t scale as gracefully to really large data sets).
@@ -243,13 +242,13 @@ Violins: the full shape of each species’ bill‐length distribution (thicker r
 
 Boxes: the median line and interquartile range, giving a quick summary of center and spread.
 
-From this, you can see that Adélie bill lengths are tightly clustered, while Gentoo and Chinstrap show wider variation.
+From this, you can see that Adelie bill lengths are tightly clustered, while Gentoo and Chinstrap show wider variation.
 
 ## 1.8 What Does a Violin Plot Add to a Box Plot?
 
-A boxplot tells me the “what” (median, IQR, outliers) but hides the “how” of the distribution. A violin plot actually shows me where the data piles up or thins out—any bumps, extra peaks, long tails, or skew—so I get a real sense of the full shape instead of just a summary.
+A box plot tells me the “what” (median, IQR, outliers) but hides the “how” of the distribution. A violin plot actually shows me where the data piles up or thins out — any bumps, extra peaks, long tails, or skew — so I get a real sense of the full shape instead of just a summary.
 
-In short, the violin turns the “skeleton” summary of a boxplot into a “flesh-and-blood” portrait of your data’s actual shape.
+In short, the violin turns the “skeleton” summary of a box plot into a “flesh-and-blood” portrait of your data’s actual shape.
 
 ## 1.9 Frequency Polygons with Rug Plot
 
@@ -288,11 +287,11 @@ Each colored line traces the count of penguins in 1 mm bins for that species.
 
 The rug ticks at the bottom mark every individual bird’s bill length (darker areas where many overlap).
 
-You can quickly compare that Adélie have shorter bills on average, while Gentoo and Chinstrap extend to larger lengths.
+You can quickly compare that Adelie have shorter bills on average, while Gentoo and Chinstrap extend to larger lengths.
 
 ## 1.10 Faceted Frequency Polygons with Rug Plots
 
-Here I split the bill‐length frequency polygons into three separate panels—one per species—and tack a colored rug underneath each to show every individual measurement.
+Here I split the bill‐length frequency polygons into three separate panels - one per species — and tack a colored rug underneath each to show every individual measurement.
 
 ```{r}
 #| label: freqpoly-faceted
@@ -329,13 +328,13 @@ penguins_clean %>%
 
 Why this helps:
 
-Each species lives in its own panel, so the lines and rugs don’t overlap across species—much easier to see each distribution’s shape.
+Each species lives in its own panel, so the lines and rugs don’t overlap across species — much easier to see each distribution’s shape.
 
 The rug ticks still show raw data points, so you can spot gaps or clustering that the polygon alone might smooth over.
 
 ## 1.11 Pros and Cons of Faceting
 
-Strength: Faceting gives each species its own panel, so there’s zero overlap between the curves and rugs—you can really focus on the shape of each distribution without any visual clutter.
+Strength: Faceting gives each species its own panel, so there’s zero overlap between the curves and rugs — you can really focus on the shape of each distribution without any visual clutter.
 
 Weakness: It eats up a lot of space and forces you to jump between panels if you want to compare species directly, making cross-species comparisons less immediate than when everything’s overlaid in one plot.
 
@@ -381,7 +380,7 @@ pairwise.t.test(
 
 In plain terms:
 
-Adélie penguins have significantly shorter bills than both Chinstraps and Gentoos.
+Adelie penguins have significantly shorter bills than both Chinstraps and Gentoos.
 
 Chinstrap bills are also significantly shorter than Gentoo bills.
 
@@ -398,7 +397,7 @@ I’m using the `mpg` data set from the **ggplot2** package
 This is a fuel‐economy data set of 234 vehicles (model years 1999–2008), with one row per model.  
 Key columns include:
 
-- `displ` (engine displacement, in litres)  
+- `displ` (engine displacement, in liters)  
 - `hwy` (highway mpg)  
 - `cty` (city mpg)  
 - `class` (vehicle class, e.g. “compact”, “suv”)  
@@ -481,7 +480,7 @@ ggplot(mpg_raw, aes(displ, hwy)) +
   )
 ```
 
-Advantage: each symbol still sits exactly at true coords, area encodes multiplicity
+Advantage: each symbol still sits exactly at true coordinates, area encodes multiplicity
 
 Disadvantage: nearby counts may still overlap; harder to read small circles
 
@@ -539,10 +538,10 @@ What did you find confusing or difficult?
 
 - We found it difficult to understand the different types of smoothing interpolation, such as LOESS and linear regression. We were not sure how to interpret the results initially, whether the graph is supposed to look how it is. We also found it difficult to understand how to use the ggplot2 package to create the different types of plots, such as for the frequency polygons with rug plot. We had to spend a lot of time reading the documentation and trying out different options to get the plots to look the way we wanted.
 
-## 3. Ai Assistance 
+## 3. AI Assistance 
 If you used any generative AI tools (e.g., ChatGPT or GitHub Copilot), explain how they helped.
 
-- We used ChatGPT to help us understand how to better show the distribution of data, especially for the overplotting, such as using geom_count() to show the overlapping data points with point area proportional to the number of overlapping observations. Also, for the smoothing interpolation, we used ChatGPT to help us understand the difference between the different type such as LOESS and linear regression, and how to use them in R.
+- We used ChatGPT to help us understand how to better show the distribution of data, especially for the over-plotting, such as using geom_count() to show the overlapping data points with point area proportional to the number of overlapping observations. Also, for the smoothing interpolation, we used ChatGPT to help us understand the difference between the different type such as LOESS and linear regression, and how to use them in R.
 
 ## 4. Teamwork
 How did your team collaborate on this assignment? Identify one strength and one area for improvement.
