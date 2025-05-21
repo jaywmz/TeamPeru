@@ -262,7 +262,7 @@ penguins_clean %>%
   )) +
   geom_freqpoly(
     binwidth = 1, # 1 mm bins
-    size     = 1 # slightly thicker lines
+    linewidth     = 1 # slightly thicker lines
   ) +
   geom_rug(
     aes(color = species),
@@ -300,7 +300,7 @@ penguins_clean %>%
   geom_freqpoly(
     aes(color = species),
     binwidth = 1,
-    size = 1
+    linewidth = 1
   ) +
   # add a semi‐transparent rug at the bottom of each panel
   geom_rug(
