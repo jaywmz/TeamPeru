@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 ```
 # 1 Visualizing the Distribution of Quantitative Data: Bill Lengths of Pygoscelis Penguins
  
-```{r setup}
+```{r}
 #| label: setup
 #| include: false
 
@@ -272,7 +272,7 @@ penguins_clean %>%
   )) +
   geom_freqpoly(
     binwidth = 1, # 1 mm bins
-    size     = 1 # slightly thicker lines
+    linewidth     = 1 # slightly thicker lines
   ) +
   geom_rug(
     aes(color = species),
@@ -310,7 +310,7 @@ penguins_clean %>%
   geom_freqpoly(
     aes(color = species),
     binwidth = 1,
-    size = 1
+    linewidth = 1
   ) +
   # add a semi‐transparent rug at the bottom of each panel
   geom_rug(
@@ -414,8 +414,6 @@ Key columns include:
 ```{r}
 #| label: import-mpg
 #| message: false
-
-library(tidyverse)
 
 mpg_raw <- read_csv(
   "https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2/mpg.csv"
