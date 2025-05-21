@@ -1,6 +1,6 @@
 ---
-title: "Week 3 Lab: Exploring ggplot2"
-author: "Team Peru"
+title: "Peru_P1_Week3Lab"
+author: "Jiang Weimin, "
 date: today
 format:
   html:
@@ -423,7 +423,7 @@ mpg_raw %>%
 #> "numeric" "numeric" "numeric"
 
 # E: at least one exact duplicate in a pair?
-#    e.g. identical city/highway mpg
+#    e.g. identical displacement/highway mpg
 mpg_raw %>%
   count(displ, hwy) %>%
   filter(n > 1)
