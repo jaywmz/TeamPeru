@@ -7,7 +7,14 @@ format:
     toc: true
     toc-depth: 4
 ---
-
+```{r globalsetup, include = TRUE}
+knitr::opts_chunk$set(
+  echo    = TRUE,
+  message = FALSE,
+  warning = TRUE,
+  error   = TRUE
+)
+```
 # 1 Visualizing the Distribution of Quantitative Data: Bill Lengths of Pygoscelis Penguins
  
 ```{r setup}
