@@ -1,6 +1,6 @@
 ---
 title: "Peru_P1_Week3Lab"
-author: "Jiang Weimin, "
+author: "Jiang Weimin, Cing Hoih San Lian"
 date: today
 format:
   html:
@@ -113,6 +113,8 @@ That returns an 84×3 table showing all duplicate locations (e.g. 7 Adelies at 4
 To see how many unique coordinate pairs there actually are, compare to the total distinct combinations:
 
 ```{r}
+#| label: distinct-pairs
+#| message: false
 penguins_clean %>%
   distinct(species, bill_length_mm) %>%
   count()
@@ -157,6 +159,7 @@ Reduced opacity (α = 0.5) highlights areas where many penguins share the same b
 ```{r}
 #| label: install-beeswarm
 #| include: false
+
 if (!requireNamespace("ggbeeswarm", quietly = TRUE)) {
   install.packages("ggbeeswarm")
 }
@@ -433,6 +436,7 @@ mpg_raw %>%
 
 ```{r}
 #| label: basic-scatter
+#| message: false
 ggplot(mpg_raw, aes(displ, hwy)) +
   geom_point(alpha = .6) +
   labs(
@@ -447,6 +451,8 @@ ggplot(mpg_raw, aes(displ, hwy)) +
 ### a) Jitter + transparency
 ```{r}
 #| label: scatter-jitter
+#| message: false
+
 ggplot(mpg_raw, aes(displ, hwy)) +
   geom_jitter(width = .1, height = .1, alpha = .4) +
   labs(
