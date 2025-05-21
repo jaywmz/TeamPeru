@@ -10,7 +10,7 @@ format:
 
 # 1 Visualizing the Distribution of Quantitative Data: Bill Lengths of Pygoscelis Penguins
  
-```{r setup}
+```{r}
 #| label: setup
 #| include: false
 
@@ -404,8 +404,6 @@ Key columns include:
 ```{r}
 #| label: import-mpg
 #| message: false
-
-library(tidyverse)
 
 mpg_raw <- read_csv(
   "https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2/mpg.csv"
