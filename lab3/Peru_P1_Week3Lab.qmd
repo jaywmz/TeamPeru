@@ -1,11 +1,12 @@
 ---
 title: "Peru_P1_Week3Lab"
-author: "Jiang Weimin, "
+author: "Jiang Weimin, Lioh Yong Hao, Teo Shun Hao, Lee Wei Kwan Bernard
+Cing Hoih San Lian, Alicia Au Yong Hui Qi"
 date: today
 format:
   html:
     toc: true
-    toc-depth: 2
+    toc-depth: 4
 ---
 
 # 1 Visualizing the Distribution of Quantitative Data: Bill Lengths of Pygoscelis Penguins
@@ -517,3 +518,27 @@ Strength: simple, easy to interpret slope & intercept
 Weakness: imposes straight‐line fit, misses curvature
 
 # 3 Reflections
+## 1. Key takeaway
+What is one thing you learned in today’s lab? Explain why this point stood out to you.
+
+- We learned the different variance of graph to used to plot out the data, such as scatter plot, jitter plot, bee-swarm plot, violin plot etc. This point stood out to us
+because we can see the different variance of graph to used to plot out the data. For 
+example, the bee-swarm plot is a better way to show the distribution of data than the 
+scatter plot, as it can clearly show the overlapping data points without any random 
+noise. The violin plot is also a good way to show the distribution of data, as it can 
+show the density of data points in different regions.
+
+## 2. Challenges
+What did you find confusing or difficult?
+
+- We found it difficult to understand the different types of smoothing interpolation, such as LOESS and linear regression. We were not sure how to interpret the results initially, whether the graph is supposed to look how it is. We also found it difficult to understand how to use the ggplot2 package to create the different types of plots, such as for the frequency polygons with rug plot. We had to spend a lot of time reading the documentation and trying out different options to get the plots to look the way we wanted.
+
+## 3. Ai Assistance 
+If you used any generative AI tools (e.g., ChatGPT or GitHub Copilot), explain how they helped.
+
+- We used ChatGPT to help us understand how to better show the distribution of data, especially for the overplotting, such as using geom_count() to show the overlapping data points with point area proportional to the number of overlapping observations. Also, for the smoothing interpolation, we used ChatGPT to help us understand the difference between the different type such as LOESS and linear regression, and how to use them in R.
+
+## 4. Teamwork
+How did your team collaborate on this assignment? Identify one strength and one area for improvement.
+
+- As a team, we collaborated well on this assignment. We divided the work based on our strengths and weaknesses, and we helped each other out when needed. One strength was that we were able to communicate effectively and share our ideas. One area for improvement would be to have more regular check-ins to ensure everyone is on the same page and to address any issues that may arise.
