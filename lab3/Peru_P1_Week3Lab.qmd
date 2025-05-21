@@ -16,8 +16,8 @@ format:
 
 # Install any CRAN packages we’ll need, quietly
 needed <- c("tidyverse", "palmerpenguins", "ggbeeswarm")
-for(pkg in needed){
-  if(!requireNamespace(pkg, quietly = TRUE)){
+for (pkg in needed) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
     install.packages(pkg)
   }
 }
@@ -40,16 +40,16 @@ We’ll:
 #| label: remove-missing
 
 # Step 1: count rows with missing bill length
-penguins %>% 
-  filter(is.na(bill_length_mm)) %>% 
+penguins %>%
+  filter(is.na(bill_length_mm)) %>%
   count(name = "n_missing")
 
 # Step 2: remove them
-penguins_clean <- penguins %>% 
+penguins_clean <- penguins %>%
   drop_na(bill_length_mm)
 
 # Step 3: verify zero missing remain
-penguins_clean %>% 
+penguins_clean %>%
   summarise(
     total_rows   = n(),
     n_missing    = sum(is.na(bill_length_mm))
@@ -104,8 +104,8 @@ We noticed in the plain scatter that tons of points land on the same spot—many
 #| message: false
 
 penguins_clean %>%
-  count(species, bill_length_mm) %>% 
-  filter(n > 1) %>% 
+  count(species, bill_length_mm) %>%
+  filter(n > 1) %>%
   arrange(desc(n))
 ```
 That returns an 84×3 table showing all duplicate locations (e.g. 7 Adelies at 41.1 mm, 5 at 37.8 mm, etc.).
@@ -134,9 +134,9 @@ penguins_clean %>%
     y = species
   )) +
   geom_jitter(
-    width  = 0,    # no horizontal jitter
-    height = 0.1,  # small vertical jitter so clusters stay distinct
-    alpha  = 0.5   # semi-transparent points to show overplotting density
+    width  = 0, # no horizontal jitter
+    height = 0.1, # small vertical jitter so clusters stay distinct
+    alpha  = 0.5 # semi-transparent points to show overplotting density
   ) +
   labs(
     x       = "Bill Length (mm)",
@@ -179,8 +179,8 @@ penguins_clean %>%
     y = species
   )) +
   geom_beeswarm(
-    size  = 1.8,      # medium point size
-    alpha = 0.7,      # slightly transparent
+    size  = 1.8, # medium point size
+    alpha = 0.7, # slightly transparent
     color = "steelblue"
   ) +
   labs(
@@ -218,13 +218,13 @@ penguins_clean %>%
     y = species
   )) +
   geom_violin(
-    fill  = "lightblue",   # soft fill to show density
-    color = "steelblue"    # outline color
+    fill  = "lightblue", # soft fill to show density
+    color = "steelblue" # outline color
   ) +
   geom_boxplot(
-    width = 0.2,           # narrow box inside the violin
-    fill  = "white",       # white box so the violin shows through
-    color = "black"        # box outline
+    width = 0.2, # narrow box inside the violin
+    fill  = "white", # white box so the violin shows through
+    color = "black" # box outline
   ) +
   labs(
     x       = "Bill Length (mm)",
@@ -261,13 +261,13 @@ penguins_clean %>%
     color = species
   )) +
   geom_freqpoly(
-    binwidth = 1,    # 1 mm bins
-    size     = 1     # slightly thicker lines
+    binwidth = 1, # 1 mm bins
+    size     = 1 # slightly thicker lines
   ) +
   geom_rug(
     aes(color = species),
-    sides   = "b",   # draw ticks only on bottom
-    alpha   = 0.5    # semi‐transparent so overlaps darken
+    sides = "b", # draw ticks only on bottom
+    alpha = 0.5 # semi‐transparent so overlaps darken
   ) +
   labs(
     x       = "Bill Length (mm)",
@@ -298,15 +298,15 @@ penguins_clean %>%
   ggplot(aes(x = bill_length_mm)) +
   # draw a frequency polygon for each species
   geom_freqpoly(
-    aes(color   = species),
-    binwidth     = 1,
-    size         = 1
+    aes(color = species),
+    binwidth = 1,
+    size = 1
   ) +
   # add a semi‐transparent rug at the bottom of each panel
   geom_rug(
-    aes(color   = species),
-    sides         = "b",
-    alpha         = 0.5
+    aes(color = species),
+    sides = "b",
+    alpha = 0.5
   ) +
   # facet into one panel per species
   facet_wrap(
@@ -416,16 +416,16 @@ nrow(mpg_raw)
 #> [1] 234
 
 # D: at least two quantitative variables?
-mpg_raw %>% 
-  select(displ, hwy, cty) %>% 
+mpg_raw %>%
+  select(displ, hwy, cty) %>%
   map_chr(class)
-#>   displ     hwy     cty 
+#>   displ     hwy     cty
 #> "numeric" "numeric" "numeric"
 
 # E: at least one exact duplicate in a pair?
 #    e.g. identical city/highway mpg
-mpg_raw %>% 
-  count(cty, hwy) %>% 
+mpg_raw %>%
+  count(displ, hwy) %>%
   filter(n > 1)
 ```
 
@@ -450,8 +450,8 @@ ggplot(mpg_raw, aes(displ, hwy)) +
 ggplot(mpg_raw, aes(displ, hwy)) +
   geom_jitter(width = .1, height = .1, alpha = .4) +
   labs(
-    x = "Displacement (L)", 
-    y = "Highway mpg", 
+    x = "Displacement (L)",
+    y = "Highway mpg",
     title = "Jittered points (α = 0.4)"
   )
 ```
